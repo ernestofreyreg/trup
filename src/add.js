@@ -1,26 +1,32 @@
 import R from 'ramda';
 
 const mergeEvents = function(level, e1, e2) {
-  let result = {};
+  if (level > 3) {
+    return R.concat(e1, e2);
+  }
 
-  if (level >= 1 && level <= 2)
-  Object.keys(e1).forEach((k) => {
-    if (!e2[k]) {
-      result[k] = e1[k];
-    }
+  if (level >= 1 && level <= 3) {
+    const result = {};
 
-    if (e2[k]) {
-      result[k] = mergeEvents(level + 1, e1[k], e2[k]);
-    }
-  });
+    Object.keys(e1).forEach((k) => {
+      if (!e2[k]) {
+        result[k] = e1[k];
+      }
 
-  Object.keys(e2).forEach((k) => {
-    if (!e1[k]) {
-      result[k] = e2[k];
-    }
-  });
+      if (e2[k]) {
+        result[k] = mergeEvents(level + 1, e1[k], e2[k]);
+      }
+    });
 
-  return result;
+
+    Object.keys(e2).forEach((k) => {
+      if (!e1[k]) {
+        result[k] = e2[k];
+      }
+    });
+
+    return result;
+  }
 };
 
 export default function(m1, m2) {
